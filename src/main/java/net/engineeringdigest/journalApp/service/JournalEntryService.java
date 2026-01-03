@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 @Slf4j
 @Component
 public class JournalEntryService {
