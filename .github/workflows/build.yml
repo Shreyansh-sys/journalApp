@@ -87,10 +87,5 @@ jobs:
             -Dsonar.projectKey=shreyansh-sys_journalapp \
             -Dsonar.organization=shreyansh-sys \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.sources=src/main/java \
-            -Dsonar.tests=src/test/java \
-            -Dsonar.java.binaries=target/classes \
-            -Dsonar.java.test.binaries=target/test-classes \
-            -Dsonar.junit.reportPaths=target/surefire-reports \
-            -Dsonar.coverage.exclusions=**/target/**,**/*Test.java \
-            -Dsonar.verbose=true
+            -Dsonar.branch.name=main \
+            -Dsonar.scm.disabled=false
