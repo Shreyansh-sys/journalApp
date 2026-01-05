@@ -37,3 +37,9 @@ jobs:
             -Dsonar.projectKey=shreyansh-sys_journalapp \
             -Dsonar.organization=shreyansh-sys \
             -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.sources=src/main/java \
+            -Dsonar.java.binaries=target/classes \
+            -Dsonar.java.libraries=~/.m2/repository/**/*.jar \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+            -Dsonar.junit.reportPaths=target/surefire-reports \
+            -Dsonar.sourceEncoding=UTF-8
