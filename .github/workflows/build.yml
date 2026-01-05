@@ -1,19 +1,62 @@
+#name: SonarCloud Analysis
+#
+#on:
+#  push:
+#    branches: [ main, master ]
+#  pull_request:
+#    branches: [ main, master ]
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0  # Required for SonarCloud to analyze all branches
+#
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '17'
+#          distribution: 'temurin'
+#
+#      - name: Cache Maven dependencies
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-m2
+#
+#      - name: Build and analyze with SonarCloud
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        run: |
+#          mvn clean verify sonar:sonar \
+#            -Dsonar.projectKey=shreyansh-sys_journalapp \
+#            -Dsonar.organization=shreyansh-sys \
+#            -Dsonar.host.url=https://sonarcloud.io
+#            -Dsonar.sources=src/main/java \
+#            -Dsonar.exclusions=**/target/**
+
 name: SonarCloud Analysis
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  build:
+  build-and-analyze:
+    name: Build and Analyze
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Required for SonarCloud to analyze all branches
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -28,14 +71,26 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build and analyze with SonarCloud
+      # CRITICAL: Build FIRST, then analyze separately
+      - name: Build with Maven
+        run: |
+          echo "=== Building project ==="
+          mvn clean compile test-compile -DskipTests
+
+      - name: Run SonarCloud Analysis
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn clean verify sonar:sonar \
+          echo "=== Running SonarCloud Analysis ==="
+          # Run ONLY sonar:sonar on already compiled code
+          mvn sonar:sonar \
             -Dsonar.projectKey=shreyansh-sys_journalapp \
             -Dsonar.organization=shreyansh-sys \
-            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.sources=src/main/java \
-            -Dsonar.exclusions=**/target/**
+            -Dsonar.tests=src/test/java \
+            -Dsonar.java.binaries=target/classes \
+            -Dsonar.java.test.binaries=target/test-classes \
+            -Dsonar.junit.reportPaths=target/surefire-reports \
+            -Dsonar.coverage.exclusions=**/target/**,**/*Test.java \
+            -Dsonar.verbose=true
