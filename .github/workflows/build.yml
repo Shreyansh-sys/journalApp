@@ -44,9 +44,9 @@ name: SonarCloud Analysis
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build-and-analyze:
@@ -85,8 +85,5 @@ jobs:
           # Run ONLY sonar:sonar on already compiled code
           mvn sonar:sonar \
             -Dsonar.projectKey=shreyansh-sys_journalapp \
-            -Dsonar.organization="Shreyansh Srivastava" \
+            -Dsonar.organization=shreyansh-sys \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.branch.name=main \
-            -Dsonar.branch.target=main 
-            -Dsonar.scm.disabled=false
