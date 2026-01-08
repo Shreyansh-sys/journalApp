@@ -1,4 +1,4 @@
-package net.engineeringdigest.journalApp;
+package net.engineeringdigest.journalApp.service;
 
 import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.repository.UserRepository;
